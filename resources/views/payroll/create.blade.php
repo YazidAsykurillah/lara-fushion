@@ -137,10 +137,10 @@
             <tbody>
               <tr>
                 <td>
-                  <input type="text" name="payroll_addition_name[]"  class="form-control" required="required">
+                  <input type="text" name="addition_name[]"  class="form-control" required="required">
                 </td>
                 <td>
-                  <input type="text" name="payroll_addition_amount[]"  class="form-control payroll_addition_amount" required="required">
+                  <input type="text" name="addition_amount[]"  class="form-control addition_amount" required="required">
                 </td>
                 <td>
                   <button type="button" class="btn btn-danger btn-xs">
@@ -155,7 +155,7 @@
                   <strong>Total</strong>
                 </td>
                 <td>
-                  <input type="text" name="total_addition" id="total_addition"  class="form-control" value="123456" readonly>
+                  <input type="text" name="total_addition" id="total_addition"  class="form-control" value="0" readonly>
                 </td>
                 <td></td>
               </tr>
@@ -187,10 +187,10 @@
             <tbody>
               <tr>
                 <td>
-                  <input type="text" name="payroll_deduction_name[]"  class="form-control" required="required">
+                  <input type="text" name="deduction_name[]"  class="form-control" required="required">
                 </td>
                 <td>
-                  <input type="text" name="payroll_deduction_amount[]"  class="form-control payroll_deduction_amount" required="required">
+                  <input type="text" name="deduction_amount[]"  class="form-control deduction_amount" required="required">
                 </td>
                 <td>
                   <button type="button" class="btn btn-danger btn-xs">
@@ -205,7 +205,7 @@
                   <strong>Total</strong>
                 </td>
                 <td>
-                  <input type="text" name="total_deduction" id="total_deduction"  class="form-control" value="123456" readonly>
+                  <input type="text" name="total_deduction" id="total_deduction"  class="form-control" value="0" readonly>
                 </td>
                 <td></td>
               </tr>
@@ -228,28 +228,28 @@
                 <td style="width: 50%;">Gross Salary</td>
                 <td style="width: 10%;">:</td>
                 <td>
-                  10.000.000
+                  <input type="text" name="gross_salary_info" id="gross_salary_info"  class="form-control" value="0" readonly>
                 </td>
               </tr>
               <tr>
                 <td style="width: 50%;">Total Addition</td>
                 <td style="width: 10%;">:</td>
                 <td>
-                  500.000
+                  <input type="text" name="total_addition_info" id="total_addition_info"  class="form-control" value="0" readonly>
                 </td>
               </tr>
               <tr>
                 <td style="width: 50%;">Total Deduction</td>
                 <td style="width: 10%;">:</td>
                 <td>
-                  100.000
+                  <input type="text" name="total_deduction_info" id="total_deduction_info"  class="form-control" value="0" readonly>
                 </td>
               </tr>
               <tr>
                 <td style="width: 50%;">Net Pay</td>
                 <td style="width: 10%;">:</td>
                 <td>
-                  10.400.000
+                  <input type="text" name="net_pay" id="net_pay"  class="form-control" value="0" readonly>
                 </td>
               </tr>
             </tbody>
@@ -302,7 +302,7 @@
         mDec:'0',
       });
 
-      $('#form-create .payroll_addition_amount').autoNumeric('init',{
+      $('#form-create .addition_amount').autoNumeric('init',{
         aSep:'.',
         aDec:',',
         mDec:'0',
@@ -314,13 +314,37 @@
         mDec:'0',
       });
 
-      $('#form-create .payroll_deduction_amount').autoNumeric('init',{
+      $('#form-create .deduction_amount').autoNumeric('init',{
         aSep:'.',
         aDec:',',
         mDec:'0',
       });
 
       $('#form-create #total_deduction').autoNumeric('init',{
+        aSep:'.',
+        aDec:',',
+        mDec:'0',
+      });
+
+      $('#form-create #gross_salary_info').autoNumeric('init',{
+        aSep:'.',
+        aDec:',',
+        mDec:'0',
+      });
+
+      $('#form-create #total_addition_info').autoNumeric('init',{
+        aSep:'.',
+        aDec:',',
+        mDec:'0',
+      });
+
+      $('#form-create #total_deduction_info').autoNumeric('init',{
+        aSep:'.',
+        aDec:',',
+        mDec:'0',
+      });
+
+      $('#form-create #net_pay').autoNumeric('init',{
         aSep:'.',
         aDec:',',
         mDec:'0',
@@ -407,24 +431,57 @@
         set_gross_salary_value();
       });
 
+      $('.addition_amount').keyup(function(){
+        set_total_addition_value();
+      });
+
+      $('.deduction_amount').keyup(function(){
+        set_total_deduction_value();
+      });
+
       //GETTER input value functions
         //num_of_days_work
         function get_num_of_days_work_value(){
-          let num_of_days_work_value = $('#num_of_days_work').autoNumeric('get');
-          return Number(num_of_days_work_value);
+          let result = $('#num_of_days_work').autoNumeric('get');
+          return Number(result);
         }
 
         //daily_rate
         function get_daily_rate_value(){
-          let daily_rate_value = $('#daily_rate').autoNumeric('get');
-          return Number(daily_rate_value);
+          let result = $('#daily_rate').autoNumeric('get');
+          return Number(result);
         }
 
         //monthly_rate
         function get_monthly_rate_value(){
-          let monthly_rate_value = $('#monthly_rate').autoNumeric('get');
-          return Number(monthly_rate_value);
+          let result = $('#monthly_rate').autoNumeric('get');
+          return Number(result);
         }
+
+        //gross rate
+        function get_gross_salary_value(){
+          let result = $('#gross_salary').autoNumeric('get');
+          return Number(result);
+        }
+
+        //get sum of value from ADDITION amount class inputs
+        function get_addition_amount_summary(){
+          let result = 0;
+          $('.addition_amount').each(function(){
+            result+=Number($(this).autoNumeric('get'));
+          });
+          return Number(result);
+        }
+
+        //get sum of value from DEDUCTION amount class inputs
+        function get_deduction_amount_summary(){
+          let result = 0;
+          $('.deduction_amount').each(function(){
+            result+=Number($(this).autoNumeric('get'));
+          });
+          return Number(result);
+        }
+
 
       //ENDGETTER input value functions
 
@@ -436,6 +493,31 @@
           let result = (num_of_days_work_value * daily_rate_value)+monthly_rate_value;
           console.log(num_of_days_work_value);
           $('#gross_salary').autoNumeric('set', result);
+          $('#gross_salary_info').autoNumeric('set', result);
+          set_net_pay_value();
+        }
+
+        function set_total_addition_value(){
+          let result = get_addition_amount_summary();
+          $('#total_addition').autoNumeric('set', result);
+          $('#total_addition_info').autoNumeric('set', result);
+          set_net_pay_value();
+        }
+
+        function set_total_deduction_value(){
+          let result = get_deduction_amount_summary();
+          $('#total_deduction').autoNumeric('set', result);
+          $('#total_deduction_info').autoNumeric('set', result);
+          set_net_pay_value();
+        }
+
+        function set_net_pay_value(){
+          let result = 0;
+          let gross_salary = get_gross_salary_value();
+          let addition_amount_summary = get_addition_amount_summary();
+          let deduction_amount_summary = get_deduction_amount_summary();
+              result = gross_salary+addition_amount_summary-deduction_amount_summary;
+              $('#net_pay').autoNumeric('set', result);
         }
       //ENDSETTER input value functions
 
